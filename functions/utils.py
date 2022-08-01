@@ -20,7 +20,15 @@ async def add_task(message: Message):
         user_id = str(message.from_user.id)
         c_time = time.time()
         random = str(c_time)
-        file_name = message.video.file_name
+
+        if message.video:
+             file_name = message.video.file_name
+        elif message.document:
+             file_name = message.document.file_name
+        elif message.audio:
+             file_name = message.audio.file_name
+        else:
+             file_name = None
 
         if file_name is None:
             file_name = user_id
