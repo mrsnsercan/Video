@@ -7,7 +7,7 @@ from functions.ffmpeg import encode, get_codec, get_thumbnail, get_duration, get
 from functions.progress import progress_for_pyrogram
 from pyrogram.errors import FloodWait, MessageNotModified, MessageIdInvalid
 from config import quee, userbot, PRE_LOG, SUDO_USERS
-
+from encoder import app
 
 async def on_task_complete():
     del quee[0]
@@ -121,12 +121,12 @@ async def handle_upload(new_file, message, msg, random):
     except MessageNotModified:
         pass
     try:
-        await message.copy_message(
+        await app.copy_message(
             chat_id=chat_id, 
             from_chat_id=PRE_LOG, 
             message_id=video.id)
     except Exception as f:
-        message.send_message(SUDO_USERS, "{f}")
+        app.send_message(SUDO_USERS, "{f}")
     try:
         shutil.rmtree(path)
         if thumb_image_path is None:
