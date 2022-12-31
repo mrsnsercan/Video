@@ -2,7 +2,7 @@ import os
 from os import environ
 from dotenv import load_dotenv
 
-from pyrogram import Client
+from pyrogram import Client, enums
 import logging
 
 logging.basicConfig(
