@@ -7,7 +7,6 @@ from functions.ffmpeg import encode, get_codec, get_thumbnail, get_duration, get
 from functions.progress import progress_for_pyrogram
 from pyrogram.errors import FloodWait, MessageNotModified, MessageIdInvalid
 from config import quee, userbot, PRE_LOG, SUDO_USERS
-from encoder import app
 
 async def on_task_complete():
     del quee[0]
