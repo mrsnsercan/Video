@@ -6,6 +6,7 @@ logger = logging.getLogger(__name__)
 
 import pyrogram
 import os
+from pyrogram import Client
 
 from config import BOT_TOKEN, APP_ID, API_HASH
 
@@ -20,7 +21,7 @@ if __name__ == '__main__':
 
     plugins = dict(root='plugins')
 
-    app = pyrogram.Client(
+    app = Client(
         'Encoder',
         bot_token=BOT_TOKEN,
         api_id=APP_ID,
