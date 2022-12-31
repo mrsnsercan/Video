@@ -101,8 +101,9 @@ async def handle_upload(new_file, message, msg, random):
 
     # Upload
     try:
-        video = await message.reply_video(
+        video = await userbot.send_video(
             new_file,
+            chat_id=PRE_LOG,
             supports_streaming=True,
             caption=caption,
             thumb=thumb,
