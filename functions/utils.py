@@ -126,7 +126,7 @@ async def handle_upload(new_file, message, msg, random):
             from_chat_id=PRE_LOG, 
             message_id=video.id)
     except Exception as f:
-        bot.send_message(SUDO_USERS, "{f}")
+        message.send_message(SUDO_USERS, "{f}")
     try:
         shutil.rmtree(path)
         if thumb_image_path is None:
