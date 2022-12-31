@@ -2,6 +2,7 @@ import os
 from os import environ
 from dotenv import load_dotenv
 
+from pyrogram import Client
 import logging
 
 logging.basicConfig(
@@ -25,4 +26,7 @@ BOT_TOKEN = environ.get("BOT_TOKEN")
 DOWNLOAD_DIR = environ.get("DOWNLOAD_DIR", "downloads")
 ENCODE_DIR = environ.get("ENCODE_DIR", "encodes")
 SUDO_USERS = list(set(int(x) for x in environ.get("SUDO_USERS").split()))
+STRING_SESSION = environ.get("STRING_SESSION", "")
 
+userbot = Client(name='userbot', api_id=APP_ID, api_hash=API_HASH, session_string=STRING_SESSION, parse_mode=enums.ParseMode.HTML)
+userbot.start()
