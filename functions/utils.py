@@ -65,7 +65,7 @@ async def add_task(message: Message):
     await on_task_complete()
 
 
-async def handle_upload(new_file, message, msg, random):
+async def handle_upload(new_file, message, msg, random, bot):
     user_id = str(message.from_user.id)
     path = os.path.join(
         DOWNLOAD_DIR,
@@ -121,12 +121,12 @@ async def handle_upload(new_file, message, msg, random):
     except MessageNotModified:
         pass
     try:
-        await app.copy_message(
+        await bot.copy_message(
             chat_id=chat_id, 
             from_chat_id=PRE_LOG, 
             message_id=video.id)
     except Exception as f:
-        app.send_message(SUDO_USERS, "{f}")
+        bot.send_message(SUDO_USERS, "{f}")
     try:
         shutil.rmtree(path)
         if thumb_image_path is None:
