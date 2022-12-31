@@ -6,7 +6,7 @@ from pyrogram.types import Message
 from functions.ffmpeg import encode, get_codec, get_thumbnail, get_duration, get_width_height
 from functions.progress import progress_for_pyrogram
 from pyrogram.errors import FloodWait, MessageNotModified, MessageIdInvalid
-from config import quee
+from config import quee, userbot, PRE_LOG
 
 
 async def on_task_complete():
