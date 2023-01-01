@@ -12,6 +12,6 @@ async def restart(app, message):
         dynoKill = (cmd[1].lower()).startswith('k')
     try:
         await message.reply_text("Normal Restart oluyor.")
-        os.execl(executable, executable, "bot.py")
+        os.execl(executable, executable, "encoder.py")
     except Exception as f:
         await message.reply_text(f"başaramadım {f}")
