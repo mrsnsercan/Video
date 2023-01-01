@@ -49,5 +49,4 @@ async def encode_video(app, message):
     await message.reply_text(f"`✔️ Sıraya Eklendi...\nSıra: {len(quee)}\n\nSabırlı olun...\n\n#kuyruk`", quote=True)
     quee.append(message)
     if len(quee) == 1:
-        await add_task(message)
-        await app.send_message(PRE_LOG, "yeni bir video gönderildi") 
+        await add_task(message) 
