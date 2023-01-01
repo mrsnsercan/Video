@@ -8,8 +8,8 @@ from pyrogram.types import Message
 
 
 @Client.on_message(filters.command("speedtest"))
-async def run_speedtest(_, cmd):
-    hiztesti = await cmd.reply_text("`⚡️ Hız Testi Yapılıyor`")
+async def run_speedtest(app, message):
+    hiztesti = await message.reply_text("`⚡️ Hız Testi Yapılıyor`")
     try:
         hiztest = speedtest.Speedtest()
         hiztest.get_best_server()
@@ -36,8 +36,8 @@ async def run_speedtest(_, cmd):
 <b>Ülke:</b> {result['server']['country']}, {result['server']['cc']}
 <b>Sponsor:</b> {result['server']['sponsor']}
 ⚡️ <b>Ping:</b> {result['ping']}"""
-    msg = await _.send_photo(
-        chat_id=cmd.chat.id, photo=hiztestifoto, caption=sonuccaption
+    msg = await app.send_photo(
+        chat_id=message.chat.id, photo=hiztestifoto, caption=sonuccaption
     )
     os.remove(hiztestifoto)
     await hiztesti.delete()
