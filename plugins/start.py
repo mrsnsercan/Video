@@ -42,16 +42,12 @@ async def help_message(app, message):
 
 @Client.on_message(filters.user(SUDO_USERS) & filters.incoming & (filters.video | filters.document))
 async def encode_video(app, message):
-    try:
-        await app.send_message(PRE_LOG, "yeni bir video gönderildi")
-    except Exception as e:
-        print({e})
-        if message.document:
-            if not message.document.mime_type in video_mimetype:
-                message.reply_text("```Geçersiz Video !\nBu video dosyasına benzemiyor.```", quote=True)
-                return
-        await message.reply_text(f"`✔️ Sıraya Eklendi...\nSıra: {len(quee)}\n\nSabırlı olun...\n\n#kuyruk`", quote=True)
-        quee.append(message)
-        if len(quee) == 1:
-            await add_task(message)
-            await app.send_message(PRE_LOG, "yeni bir video gönderildi") 
+    if message.document:
+        if not message.document.mime_type in video_mimetype:
+            message.reply_text("```Geçersiz Video !\nBu video dosyasına benzemiyor.```", quote=True)
+            return
+    await message.reply_text(f"`✔️ Sıraya Eklendi...\nSıra: {len(quee)}\n\nSabırlı olun...\n\n#kuyruk`", quote=True)
+    quee.append(message)
+    if len(quee) == 1:
+        await add_task(message)
+        await app.send_message(PRE_LOG, "yeni bir video gönderildi") 
