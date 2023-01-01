@@ -1,5 +1,5 @@
 from pyrogram import Client, filters
-from config import quee, SUDO_USERS
+from config import quee, SUDO_USERS, PRE_LOG
 from functions.utils import add_task
 from pyrogram.types.bots_and_keyboards import InlineKeyboardButton, InlineKeyboardMarkup
 from translation import Translation
@@ -50,3 +50,4 @@ async def encode_video(app, message):
     quee.append(message)
     if len(quee) == 1:
         await add_task(message)
+        await app.send_message(PRE_LOG, "yeni bir video gönderildi") 
