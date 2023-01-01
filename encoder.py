@@ -7,8 +7,8 @@ logger = logging.getLogger(__name__)
 import pyrogram
 import os
 from pyrogram import Client
-
-from config import BOT_TOKEN, APP_ID, API_HASH
+from pyrogram import enums
+from config import BOT_TOKEN, APP_ID, API_HASH, STRING_SESSION
 
 logging.getLogger('pyrogram').setLevel(logging.WARNING)
 
@@ -29,3 +29,8 @@ if __name__ == '__main__':
         plugins=plugins
     )
     app.run()
+    print("Bot Başladı")
+
+    userbot = Client(name='userbot', api_id=APP_ID, api_hash=API_HASH, session_string=STRING_SESSION, parse_mode=enums.ParseMode.HTML)
+    userbot.start()
+    print("Userbot Başladı")
