@@ -1,6 +1,7 @@
 from pyrogram import Client, filters
 from sys import executable
 import os
+
 @Client.on_message(filters.private & filters.command("restart"))
 async def restart(app, message):
     cmd = message.text.split(' ', 1)
@@ -12,5 +13,5 @@ async def restart(app, message):
     try:
         await message.reply_text("Normal Restart oluyor.")
         os.execl(executable, executable, "bot.py")
-    except Exception as f
-        await message.reply_text("başaramadım")
+    except Exception as f:
+        await message.reply_text(f"başaramadım {f}")
