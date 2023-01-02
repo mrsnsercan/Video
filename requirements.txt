@@ -4,4 +4,4 @@ python-dotenv
 hachoir
 Pillow
 ffmpeg-python
-speedtest-cli
+git+https://github.com/ali-mmagneto/gerek02
