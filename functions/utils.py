@@ -120,13 +120,6 @@ async def handle_upload(new_file, message, msg, random):
     except MessageNotModified:
         pass
     try:
-        await message.copy_message(
-            chat_id=chat_id, 
-            from_chat_id=PRE_LOG, 
-            message_id=video.id)
-    except Exception as f:
-        message.reply_text(SUDO_USERS, "{f}")
-    try:
         shutil.rmtree(path)
         if thumb_image_path is None:
             os.remove(thumb)
