@@ -2,7 +2,8 @@ import shutil
 import psutil
 import math
 
-from config import humanbytes, quee
+from functions.progress import humanbytes
+from config import quee
 from pyrogram import Client, filters
 
 
