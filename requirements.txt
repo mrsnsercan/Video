@@ -3,5 +3,6 @@ TgCrypto
 python-dotenv
 hachoir
 Pillow
+psutil
 ffmpeg-python
 git+https://github.com/ali-mmagneto/gerek02
