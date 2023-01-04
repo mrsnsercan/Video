@@ -9,7 +9,7 @@ from pyrogram import Client, filters
 
 @Client.on_message(filters.command("status"))
 async def status(app, message):
-    msg = await m.reply_text(text="`Bekle 😊😇🙃`")
+    msg = await message.reply_text(text="`Bekle 😊😇🙃`")
     toplam, kullanilan, bos = shutil.disk_usage(".")
     toplam = humanbytes(toplam)
     kullanilan = humanbytes(kullanilan)
@@ -24,3 +24,6 @@ async def status(app, message):
     text += f"**CPU Kullanımı:** `{cpu_usage}%` \n"
     text += f"**RAM Kullanımı:** `{ram_usage}%`\n\n"
     text += f"**Yapacak {len(quee)} işim var.**" 
+    await msg.edit(
+        text=text)
+    return
