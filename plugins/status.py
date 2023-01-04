@@ -17,7 +17,6 @@ async def status(app, message):
     cpu_usage = psutil.cpu_percent()
     ram_usage = psutil.virtual_memory().percent
     disk_usage = psutil.disk_usage('/').percent
-    total_users = await db.total_users_count()
     text = f"**Toplam Disk Alanı:** `{toplam}` \n"
     text += f"**Kullanılan Alan:** `{kullanilan}({disk_usage}%)` \n"
     text += f"**Boş Alan:** `{bos}` \n"
