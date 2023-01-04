@@ -17,12 +17,12 @@ async def status(app, message):
     cpu_usage = psutil.cpu_percent()
     ram_usage = psutil.virtual_memory().percent
     disk_usage = psutil.disk_usage('/').percent
-    text = f"**Toplam Disk Alanı:** `{toplam}` \n"
+    text = f"**Toplam Alanım:** `{toplam}` \n"
     text += f"**Kullanılan Alan:** `{kullanilan}({disk_usage}%)` \n"
-    text += f"**Boş Alan:** `{bos}` \n"
-    text += f"**CPU Kullanımı:** `{cpu_usage}%` \n"
-    text += f"**RAM Kullanımı:** `{ram_usage}%`\n\n"
-    text += f"**Yapacak {len(quee)} işim var.**" 
+    text += f"**Boş Alanım:** `{bos}` \n"
+    text += f"**CPU Kullanımım:** `{cpu_usage}%` \n"
+    text += f"**RAM Kullanımım:** `{ram_usage}%`\n\n"
+    text += f"**Ayrıca Yapacak {len(quee)} işim var 😡**" 
     await msg.edit(
         text=text
     )
