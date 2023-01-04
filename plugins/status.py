@@ -25,5 +25,6 @@ async def status(app, message):
     text += f"**RAM Kullanımı:** `{ram_usage}%`\n\n"
     text += f"**Yapacak {len(quee)} işim var.**" 
     await msg.edit(
-        text=text)
+        text=text
+    )
     return
