@@ -28,6 +28,7 @@ ENCODE_DIR = environ.get("ENCODE_DIR", "encodes")
 SUDO_USERS = list(set(int(x) for x in environ.get("SUDO_USERS").split()))
 PRE_LOG = environ.get("PRE_LOG", "")
 STRING_SESSION = environ.get('USER_SESSION_STRING', '')
+
 userbot = Client(name='userbot', api_id=APP_ID, api_hash=API_HASH, session_string=STRING_SESSION, parse_mode=enums.ParseMode.HTML)
 userbot.start()
 print("Userbot Başlatıldı 4 gb yükleme aktif")
