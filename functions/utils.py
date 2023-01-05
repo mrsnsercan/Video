@@ -97,31 +97,59 @@ async def handle_upload(new_file, message, msg, random):
         caption = message.caption
     else:
         caption = caption_str
-
+    
     # Upload
-    try:
-        video = await userbot.send_video(
-            PRE_LOG,
-            new_file,
-            supports_streaming=True,
-            caption=caption,
-            thumb=thumb,
-            duration=duration,
-            width=width,
-            height=height,
-            progress=progress_for_pyrogram,
-            progress_args=("`Yükleniyor...`", msg, c_time)
-        )
-        if not audio_codec:
-            await video.reply_text("`⚪ Bu videonun sesi yoktu ama yine de kodladım.\n\n#bilgilendirme`", quote=True)
-    except FloodWait as e:
-        print(f"Sleep of {e.value} required by FloodWait ...")
-        time.sleep(e.value)
-    except MessageNotModified:
-        pass
-    try:
-        shutil.rmtree(path)
-        if thumb_image_path is None:
-            os.remove(thumb)
-    except:
-        pass
+    file_size = os.stat(new_file).st_size
+    if file_size > 2093796556:
+        try:
+            video = await userbot.send_video(
+                PRE_LOG,
+                new_file,
+                supports_streaming=True,
+                caption=caption,
+                thumb=thumb,
+                duration=duration,
+                width=width,
+                height=height,
+                progress=progress_for_pyrogram,
+                progress_args=("`Yükleniyor...`", msg, c_time)
+            )
+            if not audio_codec:
+                await video.reply_text("`⚪ Bu videonun sesi yoktu ama yine de kodladım.\n\n#bilgilendirme`", quote=True)
+        except FloodWait as e:
+            print(f"Sleep of {e.value} required by FloodWait ...")
+            time.sleep(e.value)
+        except MessageNotModified:
+            pass
+        try:
+            shutil.rmtree(path)
+            if thumb_image_path is None:
+               os.remove(thumb)
+        except:
+            pass
+    else:
+        try:
+            video = await message.reply_video(
+                new_file,
+                supports_streaming=True,
+                caption=caption,
+                thumb=thumb,
+                duration=duration,
+                width=width,
+                height=height,
+                progress=progress_for_pyrogram,
+                progress_args=("`Yükleniyor...`", msg, c_time)
+            )
+            if not audio_codec:
+                await video.reply_text("`⚪ Bu videonun sesi yoktu ama yine de kodladım.\n\n#bilgilendirme`", quote=True)
+        except FloodWait as e:
+            print(f"Sleep of {e.value} required by FloodWait ...")
+            time.sleep(e.value)
+        except MessageNotModified:
+            pass
+        try:
+            shutil.rmtree(path)
+            if thumb_image_path is None:
+               os.remove(thumb)
+        except:
+            pass     
