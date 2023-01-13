@@ -29,6 +29,10 @@ SUDO_USERS = list(set(int(x) for x in environ.get("SUDO_USERS").split()))
 PRE_LOG = environ.get("PRE_LOG", "")
 STRING_SESSION = environ.get('STRING_SESSION', '')
 
-userbot = Client(name='userbot', api_id=APP_ID, api_hash=API_HASH, session_string=STRING_SESSION, parse_mode=enums.ParseMode.HTML)
+userbot = Client(name='userbot', api_id=APP_ID, api_hash=API_HASH, session_string=STRING_SESSION)
 userbot.start()
 print("Userbot Başlatıldı 4 gb yükleme aktif")
+
+app = Client(name='Encoder', bot_token=BOT_TOKEN, api_id=APP_ID, api_hash=API_HASH, parse_mode=enums.ParseMode.HTML)
+app.run()
+print("Bot Başladı")
