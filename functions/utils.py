@@ -63,7 +63,7 @@ async def add_task(message: Message):
     await on_task_complete()
 
 
-async def handle_upload(new_file, message, msg, random):
+async def handle_upload(app, new_file, message, msg, random):
     user_id = str(message.from_user.id)
     path = os.path.join(
         DOWNLOAD_DIR,
@@ -100,7 +100,7 @@ async def handle_upload(new_file, message, msg, random):
     # Upload
     file_size = os.stat(new_file).st_size
     if file_size > 1:
-        await message.send_message(Config.PRE_LOG, "Video Geliyor.")
+        await app.send_message(Config.PRE_LOG, "Video Geliyor.")
         try:
             video = await userbot.send_video(
                 PRE_LOG,
