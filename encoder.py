@@ -12,13 +12,15 @@ from config import BOT_TOKEN, APP_ID, API_HASH
 
 logging.getLogger('pyrogram').setLevel(logging.WARNING)
 
-if not os.path.isdir('downloads'):
-    os.mkdir('downloads')
-if not os.path.isdir('encodes'):
-    os.mkdir('encodes')
+if __name__ == '__main__':
 
-plugins = dict(root='plugins')
+    if not os.path.isdir('downloads'):
+        os.mkdir('downloads')
+    if not os.path.isdir('encodes'):
+        os.mkdir('encodes')
 
-app = Client(name='Encoder', bot_token=BOT_TOKEN, api_id=APP_ID, api_hash=API_HASH, plugins=plugins, parse_mode=enums.ParseMode.HTML)
-app.run()
-print("Bot Başladı")
+    plugins = dict(root='plugins')
+
+    app = Client(name='Encoder', bot_token=BOT_TOKEN, api_id=APP_ID, api_hash=API_HASH, plugins=plugins, parse_mode=enums.ParseMode.HTML)
+    app.run()
+    print("Bot Başladı")
