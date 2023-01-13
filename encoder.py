@@ -21,6 +21,12 @@ if __name__ == '__main__':
 
     plugins = dict(root='plugins')
 
-    app = Client(name='Encoder', bot_token=BOT_TOKEN, api_id=APP_ID, api_hash=API_HASH, plugins=plugins, parse_mode=enums.ParseMode.HTML)
+    app = Client(
+        name='Encoder', 
+        bot_token=BOT_TOKEN, 
+        api_id=APP_ID, 
+        api_hash=API_HASH, 
+        plugins=plugins
+    )
     app.run()
     print("Bot Başladı")
