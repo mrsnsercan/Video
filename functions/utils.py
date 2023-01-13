@@ -100,8 +100,6 @@ async def handle_upload(new_file, message, msg, random):
     # Upload
     file_size = os.stat(new_file).st_size
     if file_size > 1:
-        message.get_chat(chat_id=Config.PRE_LOG)
-        print(get_chat)
         await message.send_message(Config.PRE_LOG, "Video Geliyor.")
         try:
             video = await userbot.send_video(
