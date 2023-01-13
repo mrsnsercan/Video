@@ -32,7 +32,3 @@ STRING_SESSION = environ.get('STRING_SESSION', '')
 userbot = Client(name='userbot', api_id=APP_ID, api_hash=API_HASH, session_string=STRING_SESSION)
 userbot.start()
 print("Userbot Başlatıldı 4 gb yükleme aktif")
-
-app = Client(name='Encoder2', bot_token=BOT_TOKEN, api_id=APP_ID, api_hash=API_HASH, parse_mode=enums.ParseMode.HTML)
-app.run()
-print("Bot Başladı")
