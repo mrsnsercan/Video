@@ -6,7 +6,7 @@ from pyrogram.types import Message
 from functions.ffmpeg import encode, get_codec, get_thumbnail, get_duration, get_width_height
 from functions.progress import progress_for_pyrogram
 from pyrogram.errors import FloodWait, MessageNotModified, MessageIdInvalid
-from config import quee, PRE_LOG, SUDO_USERS, userbot
+from config import quee, PRE_LOG, SUDO_USERS, userbot, app
 async def on_task_complete():
     del quee[0]
     if len(quee) > 0:
@@ -63,7 +63,7 @@ async def add_task(message: Message):
     await on_task_complete()
 
 
-async def handle_upload(app, new_file, message, msg, random):
+async def handle_upload(new_file, message, msg, random):
     user_id = str(message.from_user.id)
     path = os.path.join(
         DOWNLOAD_DIR,
