@@ -18,7 +18,7 @@ logging.getLogger('pyrogram').setLevel(logging.WARNING)
     if not os.path.isdir('encodes'):
         os.mkdir('encodes')
 
-     plugins = dict(root='plugins')
+    plugins = dict(root='plugins')
 
     app = Client(
         'Encoder',
