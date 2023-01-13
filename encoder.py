@@ -12,6 +12,7 @@ from config import BOT_TOKEN, APP_ID, API_HASH
 
 logging.getLogger('pyrogram').setLevel(logging.WARNING)
 
+if __name__ == '__main__':
 
     if not os.path.isdir('downloads'):
         os.mkdir('downloads')
