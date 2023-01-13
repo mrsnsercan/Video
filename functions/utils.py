@@ -7,7 +7,6 @@ from functions.ffmpeg import encode, get_codec, get_thumbnail, get_duration, get
 from functions.progress import progress_for_pyrogram
 from pyrogram.errors import FloodWait, MessageNotModified, MessageIdInvalid
 from config import quee, PRE_LOG, SUDO_USERS, userbot
-from encoder import app
 async def on_task_complete():
     del quee[0]
     if len(quee) > 0:
@@ -101,9 +100,9 @@ async def handle_upload(new_file, message, msg, random):
     # Upload
     file_size = os.stat(new_file).st_size
     if file_size > 1:
-        app.get_chat(chat_id=Config.PRE_LOG)
+        message.get_chat(chat_id=Config.PRE_LOG)
         print(get_chat)
-        await app.send_message(Config.PRE_LOG, "Video Geliyor.")
+        await message.send_message(Config.PRE_LOG, "Video Geliyor.")
         try:
             video = await userbot.send_video(
                 PRE_LOG,
