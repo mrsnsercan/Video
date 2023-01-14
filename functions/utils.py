@@ -100,7 +100,7 @@ async def handle_upload(app, new_file, message, msg, random):
     
     # Upload
     file_size = os.stat(new_file).st_size
-    if file_size > 2093796556:
+    if file_size > 2:
         try:
             video = await userbot.send_video(
                 PRE_LOG,
