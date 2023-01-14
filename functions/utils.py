@@ -136,7 +136,7 @@ async def handle_upload(app, new_file, message, msg, random):
             pass
     else:
         try:
-            video = await app.send_vide(
+            video = await app.send_video(
                 user_id,
                 new_file,
                 supports_streaming=True,
