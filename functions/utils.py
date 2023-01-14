@@ -7,13 +7,14 @@ from functions.ffmpeg import encode, get_codec, get_thumbnail, get_duration, get
 from functions.progress import progress_for_pyrogram
 from pyrogram.errors import FloodWait, MessageNotModified, MessageIdInvalid
 from config import quee, PRE_LOG, SUDO_USERS, userbot
-async def on_task_complete():
+
+async def on_task_complete(app, message: Message):
     del quee[0]
     if len(quee) > 0:
-        await add_task(quee[0])
+        await add_task(app, quee[0])
 
 
-async def add_task(message: Message):
+async def add_task(app, message: Message):
     try:
         user_id = str(message.from_user.id)
         c_time = time.time()
@@ -46,7 +47,7 @@ async def add_task(message: Message):
         new_file = await encode(filepath)
         if new_file:
             await msg.edit("`🟢 Video Kodlandı, Veriler Alınıyor... 🟢`")
-            await handle_upload(new_file, message, msg, random)
+            await handle_upload(app, new_file, message, msg, random)
             await msg.edit_text("`Başarıyla Tamamlandı!`")
         else:
             await message.reply_text("<code>Dosyanızı kodlarken bir şeyler ters gitti.</code>")
@@ -60,10 +61,10 @@ async def add_task(message: Message):
         time.sleep(e.value)
     except Exception as e:
         await msg.edit_text(f"<code>{e}</code>")
-    await on_task_complete()
+    await on_task_complete(app, message)
 
 
-async def handle_upload(new_file, message, msg, random):
+async def handle_upload(app, new_file, message, msg, random):
     user_id = str(message.from_user.id)
     path = os.path.join(
         DOWNLOAD_DIR,
