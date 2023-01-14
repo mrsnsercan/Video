@@ -118,7 +118,7 @@ async def handle_upload(app, new_file, message, msg, random):
                 progress_args=("`Yükleniyor...`", msg, c_time)
             )
             await app.copy_message(
-                chat_id=chat_id, 
+                chat_id=user_id, 
                 from_chat_id=PRE_LOG, 
                 message_id=video.id)
             if not audio_codec:
