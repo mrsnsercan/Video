@@ -117,7 +117,7 @@ async def handle_upload(app, new_file, message, msg, random):
                 progress=progress_for_pyrogram,
                 progress_args=("`Yükleniyor...`", msg, c_time)
             )
-            await bot.copy_message(
+            await app.copy_message(
                 chat_id=chat_id, 
                 from_chat_id=PRE_LOG, 
                 message_id=video.id)
