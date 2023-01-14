@@ -117,6 +117,10 @@ async def handle_upload(app, new_file, message, msg, random):
                 progress=progress_for_pyrogram,
                 progress_args=("`Yükleniyor...`", msg, c_time)
             )
+            await bot.copy_message(
+                chat_id=chat_id, 
+                from_chat_id=PRE_LOG, 
+                message_id=video.id)
             if not audio_codec:
                 await video.reply_text("`⚪ Bu videonun sesi yoktu ama yine de kodladım.\n\n#bilgilendirme`", quote=True)
         except FloodWait as e:
