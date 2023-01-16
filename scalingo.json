@@ -1,0 +1,33 @@
+{
+  "name": "VideoSesDonustur",
+  "description": "of deneme yapiyom",
+  "addons": [
+    "scalingo-postgresql"
+  ],
+  "website": "t.me/mmagneto",
+  "repository": "https://github.com/ali-mmagneto/VideoSesDonustur",
+  "logo": "https://telegra.ph/file/edc38e9a92b97c9a37a2e.jpg",
+  "env": {
+    "STRING_SESSION": {
+      "description": "The secret used to create the user ID from a username:password pair",
+      "generator": "secret"
+    }
+    "BOT_TOKEN": {
+      "description": "The secret used to create the user ID from a username:password pair",
+      "generator": "secret"
+    }
+    "APP_ID": {
+      "description": "The secret used to create the user ID from a username:password pair",
+      "generator": "secret"
+    } 
+    "API_HASH": {
+      "description": "The secret used to create the user ID from a username:password pair",
+      "generator": "secret"
+    } 
+    "PRE_LOG": {
+      "description": "The secret used to create the user ID from a username:password pair",
+      "generator": "secret"
+     https://github.com/Kinto/kinto-scalingo/tree/master
+    } 
+  }
+}
