@@ -37,7 +37,7 @@ FFmpeg profilini değiştirmek isterseniz şuradan ayarlayın: [ffmpeg.py](/func
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Turkce-Botlar-Sohbet/VideoSesDonustur/blob/master/VideoSesDonustur.ipynb)
 
 ## Scalingo
-[![Deploy to Scalingo](https://cdn.scalingo.com/deploy/button.svg)](https://my.scalingo.com/deploy)
+[![Deploy](https://cdn.scalingo.com/deploy/button.svg)](https://dashboard.scalingo.com/create/app?source=https://github.com/ali-mmagneto/VideoSesDonustur/tree/master)
 
 ## Linux'ta Docker ile Kurulum:
 
