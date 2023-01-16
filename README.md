@@ -40,7 +40,7 @@ FFmpeg profilini değiştirmek isterseniz şuradan ayarlayın: [ffmpeg.py](/func
 [![Deploy to Scalingo](https://cdn.scalingo.com/deploy/button.svg)](https://my.scalingo.com/deploy?source=https://github.com/ali-mmagneto/VideoSesDonustur#master)
 ## Linux'ta Docker ile Kurulum:
 
-- 1. Python ve Docker'ı kurun.
+- 
 ```
 sudo snap install docker
 sudo apt install python3
