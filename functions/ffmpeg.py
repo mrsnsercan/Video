@@ -25,7 +25,15 @@ def get_codec(filepath, channel="v:0"):
     return output.decode("utf-8").split()
 
 
-async def encode(filepath):
+async def encode(*args):
+    # Argüman sayısına göre filepath'i belirle
+    if len(args) == 1:
+        filepath = args[0]
+    elif len(args) == 2:
+        filepath = args[1]  # self, filepath şeklinde çağrılmışsa
+    else:
+        raise TypeError("encode() 1 veya 2 argüman almalıdır")
+
     path, extension = os.path.splitext(filepath)
     file_name = os.path.basename(path)
     encode_dir = os.path.join(
@@ -36,22 +44,34 @@ async def encode(filepath):
     assert (output_filepath != filepath)
     if os.path.isfile(output_filepath):
         print('"{}" Atlanıyor: dosya zaten var'.format(output_filepath))
+        return output_filepath
     print(filepath)
 
-    # Get the audio and subs channel codec
-    audio_codec = get_codec(filepath, channel='a:0')
+    # İkinci ses kanalının kodunu al
+    audio_codec = get_codec(filepath, channel='a:1')
 
+    # Ses işleme seçenekleri
     if not audio_codec:
-        audio_opts = '-c:v copy'
-    elif audio_codec[0] in 'aac':
-        audio_opts = '-c:v copy'
+        audio_opts = ['-c:v', 'copy']
+    elif audio_codec[0] == 'aac':
+        audio_opts = ['-c:v', 'copy', '-c:a', 'copy']
     else:
-        audio_opts = '-c:a aac -c:v copy'
+        audio_opts = ['-c:v', 'copy', '-c:a', 'aac']
 
-    command = ['ffmpeg', '-y', '-i', filepath]
-    command.extend(audio_opts.split())
+    # FFmpeg komutunu oluştur
+    command = [
+        'ffmpeg',
+        '-y',
+        '-i', filepath,
+        '-map', '0:v:0',    # İlk video kanalı
+        '-map', '0:a:1?',   # İkinci ses kanalı (opsiyonel)
+        *audio_opts,
+        output_filepath
+    ]
+
+    # FFmpeg işlemini asenkron olarak çalıştır
     proc = await asyncio.create_subprocess_exec(
-        *command, output_filepath,
+        *command,
         stdout=asyncio.subprocess.PIPE,
         stderr=asyncio.subprocess.PIPE
     )
