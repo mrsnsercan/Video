@@ -84,9 +84,14 @@ async def encode(self, filepath):
 
 
 def get_thumbnail(in_filename, path, ttl):
-    # Benzersiz bir dosya adı oluştur
-    out_filename = os.path.join(path, f"{int(time.time())}_{ttl}.jpg")
+    # Çıktı dosya adını oluştur
+    out_filename = os.path.join(path, f"thumbnail_{int(time.time())}.jpg")
+    
     try:
+        # Önce dosyayı oluştur (eğer ffmpeg başarısız olursa, bu dosyayı sileceğiz)
+        open(out_filename, 'w').close()
+        
+        # Thumbnail oluştur
         (
             ffmpeg
             .input(in_filename, ss=ttl)
@@ -96,13 +101,16 @@ def get_thumbnail(in_filename, path, ttl):
         )
         return out_filename
     except ffmpeg.Error as e:
-        # Eğer dosya oluşturulduysa ama hata olduysa, sil
+        # Hata oluştu, oluşturduğumuz dosyayı silelim
         if os.path.exists(out_filename):
-            try:
-                os.remove(out_filename)
-            except OSError:
-                pass
+            os.remove(out_filename)
         print(f"Thumbnail oluşturma hatası: {e.stderr.decode() if e.stderr else str(e)}")
+        return None
+    except Exception as e:
+        # Diğer hatalar
+        if os.path.exists(out_filename):
+            os.remove(out_filename)
+        print(f"Beklenmeyen hata: {str(e)}")
         return None
 
 
