@@ -36,34 +36,22 @@ async def encode(filepath):
     assert (output_filepath != filepath)
     if os.path.isfile(output_filepath):
         print('"{}" Atlanıyor: dosya zaten var'.format(output_filepath))
-        return output_filepath
     print(filepath)
 
-    # İkinci ses kanalının kodunu al
-    audio_codec = get_codec(filepath, channel='a:1')
+    # Get the audio and subs channel codec
+    audio_codec = get_codec(filepath, channel='a:0')
 
-    # Ses işleme seçenekleri
     if not audio_codec:
-        audio_opts = ['-c:v', 'copy']
-    elif audio_codec[0] == 'aac':
-        audio_opts = ['-c:v', 'copy', '-c:a', 'copy']
+        audio_opts = '-c:v copy'
+    elif audio_codec[0] in 'aac':
+        audio_opts = '-c:v copy'
     else:
-        audio_opts = ['-c:v', 'copy', '-c:a', 'aac']
+        audio_opts = '-c:a aac -c:v copy'
 
-    # FFmpeg komutunu oluştur
-    command = [
-        'ffmpeg',
-        '-y',
-        '-i', filepath,
-        '-map', '0:v:0',    # İlk video kanalı
-        '-map', '0:a:1?',   # İkinci ses kanalı (opsiyonel)
-        *audio_opts,
-        output_filepath
-    ]
-
-    # FFmpeg işlemini asenkron olarak çalıştır
+    command = ['ffmpeg', '-y', '-i', filepath]
+    command.extend(audio_opts.split())
     proc = await asyncio.create_subprocess_exec(
-        *command,
+        *command, output_filepath,
         stdout=asyncio.subprocess.PIPE,
         stderr=asyncio.subprocess.PIPE
     )
@@ -101,3 +89,4 @@ def get_width_height(filepath):
         return metadata.get("width"), metadata.get("height")
     else:
         return 1280, 720
+        
