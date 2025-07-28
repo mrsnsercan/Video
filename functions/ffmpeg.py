@@ -26,7 +26,7 @@ def get_codec(filepath, channel="v:0"):
         )
         return output.decode("utf-8").split()
     except CalledProcessError as e:
-        print(f"ffprobe error: {e.stderr.decode()}")
+        print(f"ffprobe error: {e.stderr.decode() if e.stderr else str(e)}")
         return None
 
 
@@ -45,13 +45,9 @@ async def encode(self, filepath):
     print(f"Encoding: {filepath}")
 
     # Ses kanalını güvenli şekilde kontrol et
-    audio_codec = None
-    try:
-        audio_codec = get_codec(filepath, channel='a:0')
-    except Exception as e:
-        print(f"Codec check error: {str(e)}")
+    audio_codec = get_codec(filepath, channel='a:0')
 
-    # Ses işleme seçenekleri
+    # FFmpeg komutunu oluştur
     command = [
         'ffmpeg',
         '-y',
@@ -60,11 +56,12 @@ async def encode(self, filepath):
         '-c:v', 'copy',     # Videoyu her durumda kopyala
     ]
 
-    # Ses kanalı varsa ve AAC değilse dönüştür
-    if audio_codec and audio_codec[0] != 'aac':
-        command.extend(['-map', '0:a:0?', '-c:a', 'aac'])
-    elif audio_codec:
-        command.extend(['-map', '0:a:0?', '-c:a', 'copy'])
+    # Ses kanalı varsa ve AAC değilse dönüştür, AAC ise kopyala
+    if audio_codec:
+        if audio_codec[0] != 'aac':
+            command.extend(['-map', '0:a:0?', '-c:a', 'aac'])
+        else:
+            command.extend(['-map', '0:a:0?', '-c:a', 'copy'])
     else:
         print("⚠️ Ses kanalı bulunamadı, sadece video kopyalanacak")
 
@@ -87,7 +84,8 @@ async def encode(self, filepath):
 
 
 def get_thumbnail(in_filename, path, ttl):
-    out_filename = os.path.join(path, str(time.time()) + ".jpg")
+    # Benzersiz bir dosya adı oluştur
+    out_filename = os.path.join(path, f"{int(time.time())}_{ttl}.jpg")
     try:
         (
             ffmpeg
@@ -98,7 +96,13 @@ def get_thumbnail(in_filename, path, ttl):
         )
         return out_filename
     except ffmpeg.Error as e:
-        print(f"Thumbnail oluşturma hatası: {e.stderr.decode()}")
+        # Eğer dosya oluşturulduysa ama hata olduysa, sil
+        if os.path.exists(out_filename):
+            try:
+                os.remove(out_filename)
+            except OSError:
+                pass
+        print(f"Thumbnail oluşturma hatası: {e.stderr.decode() if e.stderr else str(e)}")
         return None
 
 
