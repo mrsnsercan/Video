@@ -5,4 +5,5 @@ hachoir
 Pillow
 psutil
 ffmpeg-python
+ffmpeg
 git+https://github.com/ali-mmagneto/gerek02
