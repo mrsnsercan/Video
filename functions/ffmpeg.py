@@ -25,15 +25,7 @@ def get_codec(filepath, channel="v:0"):
     return output.decode("utf-8").split()
 
 
-async def encode(*args):
-    # Argüman sayısına göre filepath'i belirle
-    if len(args) == 1:
-        filepath = args[0]
-    elif len(args) == 2:
-        filepath = args[1]  # self, filepath şeklinde çağrılmışsa
-    else:
-        raise TypeError("encode() 1 veya 2 argüman almalıdır")
-
+async def encode(filepath):
     path, extension = os.path.splitext(filepath)
     file_name = os.path.basename(path)
     encode_dir = os.path.join(
@@ -47,8 +39,8 @@ async def encode(*args):
         return output_filepath
     print(filepath)
 
-    # İkinci ses kanalının kodunu al
-    audio_codec = get_codec(filepath, channel='a:1')
+    # İlk ses kanalının kodunu al (a:0)
+    audio_codec = get_codec(filepath, channel='a:0')
 
     # Ses işleme seçenekleri
     if not audio_codec:
@@ -64,7 +56,7 @@ async def encode(*args):
         '-y',
         '-i', filepath,
         '-map', '0:v:0',    # İlk video kanalı
-        '-map', '0:a:1?',   # İkinci ses kanalı (opsiyonel)
+        '-map', '0:a:0?',   # İlk ses kanalı (opsiyonel)
         *audio_opts,
         output_filepath
     ]
