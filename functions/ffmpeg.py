@@ -1,106 +1,103 @@
 import os
-import subprocess
-import logging
-import re
-from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+import time
+import asyncio
+import ffmpeg
+from subprocess import check_output
+from hachoir.metadata import extractMetadata
+from hachoir.parser import createParser
+from config import ENCODE_DIR
 
-def get_audio_tracks(input_video):
-    """Videodaki ses sayısını tespit eder"""
+def get_codec(filepath, channel="v:0"):
+    output = check_output(
+        [
+            "ffprobe",
+            "-v",
+            "error",
+            "-select_streams",
+            channel,
+            "-show_entries",
+            "stream=codec_name,codec_tag_string",
+            "-of",
+            "default=nokey=1:noprint_wrappers=1",
+            filepath,
+        ]
+    )
+    return output.decode("utf-8").split()
+
+
+async def encode(filepath):
+    path, extension = os.path.splitext(filepath)
+    file_name = os.path.basename(path)
+    encode_dir = os.path.join(
+        ENCODE_DIR,
+        file_name
+    )
+    output_filepath = encode_dir + '.mp4'
+    assert (output_filepath != filepath)
+    if os.path.isfile(output_filepath):
+        print('"{}" Atlanıyor: dosya zaten var'.format(output_filepath))
+        return output_filepath
+    print(filepath)
+
+    # İkinci ses kanalının kodunu al
+    audio_codec = get_codec(filepath, channel='a:1')
+
+    # Ses işleme seçenekleri
+    if not audio_codec:
+        audio_opts = ['-c:v', 'copy']
+    elif audio_codec[0] == 'aac':
+        audio_opts = ['-c:v', 'copy', '-c:a', 'copy']
+    else:
+        audio_opts = ['-c:v', 'copy', '-c:a', 'aac']
+
+    # FFmpeg komutunu oluştur
     command = [
-        'ffprobe', '-v', 'error', '-select_streams', 'a',
-        '-show_entries', 'stream=index', '-of', 'csv=p=0', input_video
+        'ffmpeg',
+        '-y',
+        '-i', filepath,
+        '-map', '0:v:0',    # İlk video kanalı
+        '-map', '0:a:1?',   # İkinci ses kanalı (opsiyonel)
+        *audio_opts,
+        output_filepath
     ]
+
+    # FFmpeg işlemini asenkron olarak çalıştır
+    proc = await asyncio.create_subprocess_exec(
+        *command,
+        stdout=asyncio.subprocess.PIPE,
+        stderr=asyncio.subprocess.PIPE
+    )
+    await proc.communicate()
+    return output_filepath
+
+
+def get_thumbnail(in_filename, path, ttl):
+    out_filename = os.path.join(path, str(time.time()) + ".jpg")
+    open(out_filename, 'a').close()
     try:
-        output = subprocess.check_output(command, text=True, stderr=subprocess.STDOUT)
-        return len(output.strip().split('\n')) if output.strip() else 0
-    except subprocess.CalledProcessError:
+        (
+            ffmpeg
+                .input(in_filename, ss=ttl)
+                .output(out_filename, vframes=1)
+                .overwrite_output()
+                .run(capture_stdout=True, capture_stderr=True)
+        )
+        return out_filename
+    except ffmpeg.Error as e:
+        return None
+
+
+def get_duration(filepath):
+    metadata = extractMetadata(createParser(filepath))
+    if metadata.has("duration"):
+        return metadata.get('duration').seconds
+    else:
         return 0
 
-def create_audio_keyboard():
-    """Ses seçimi için inline klavye oluşturur"""
-    return InlineKeyboardMarkup([
-        [
-            InlineKeyboardButton("1. Ses", callback_data="audio_1"),
-            InlineKeyboardButton("2. Ses", callback_data="audio_2")
-        ],
-        [InlineKeyboardButton("Her İkisi", callback_data="audio_both")]
-    ])
 
-async def ffmpeg(client, message, input_video, watermark, audio_option=None):
-    try:
-        # Video metadata al
-        cmd = [
-            'ffprobe', '-v', 'error', '-show_entries',
-            'format=duration:stream=width,height', '-of',
-            'csv=p=0', input_video
-        ]
-        output = subprocess.check_output(cmd, text=True, stderr=subprocess.STDOUT)
-        width, height, duration = map(float, re.findall(r"[\d.]+", output))
-        
-        # Watermark boyutlandırma
-        watermark_size_percentage = 10
-        watermark_resized = "watermark_resized.png"
-        resize_cmd = [
-            'ffmpeg', '-i', watermark, '-vf',
-            f'scale=w=iw*{watermark_size_percentage/100}:h=ow/mdar',
-            '-y', watermark_resized
-        ]
-        subprocess.run(resize_cmd, check=True)
-
-        # Ses seçimi kontrolü
-        num_audio = get_audio_tracks(input_video)
-        if num_audio == 2 and audio_option is None:
-            await message.reply_text(
-                "🎧 Videoda 2 ses kanalı bulundu! Lütfen bir seçenek belirtin:",
-                reply_markup=create_audio_keyboard()
-            )
-            return {"status": "audio_choice_required"}
-
-        # Çıkış dosyası adı
-        output_video = f"{input_video}.compressed.mp4"
-        
-        # FFmpeg komutunu oluştur
-        command = [
-            'ffmpeg', '-i', input_video, '-i', watermark_resized,
-            '-filter_complex',
-            f'[1][0]scale2ref=w=\'iw*{watermark_size_percentage/100}\':h=\'ow/mdar\'[wm][vid];'
-            f'[vid][wm]overlay=main_w-overlay_w-10:main_h-overlay_h-10',
-            '-c:v', 'libx264', '-crf', '32', '-preset', 'veryfast'
-        ]
-
-        # Ses seçeneklerine göre parametreler
-        if audio_option == "audio_1":
-            command += ['-map', '0:a:0?', '-c:a', 'copy']
-        elif audio_option == "audio_2":
-            command += ['-map', '0:a:1?', '-c:a', 'copy']
-        elif audio_option == "audio_both":
-            command += [
-                '-filter_complex', '[0:a:0][0:a:1]amerge=inputs=2[a]',
-                '-map', '[a]', '-ac', '2', '-c:a', 'aac'
-            ]
-        else:  # Varsayılan: ilk sesi kullan
-            command += ['-c:a', 'copy']
-
-        command.append(output_video)
-
-        # FFmpeg komutunu çalıştır
-        process = subprocess.Popen(
-            command,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            universal_newlines=True
-        )
-        
-        # İlerlemeyi logla
-        for line in process.stdout:
-            logging.info(line.strip())
-        
-        # Temizlik
-        os.remove(input_video)
-        os.remove(watermark_resized)
-        
-        return {"output": output_video, "duration": duration}
-
-    except Exception as e:
-        logging.error(f"FFmpeg error: {str(e)}")
-        return {"error": str(e)}
+def get_width_height(filepath):
+    metadata = extractMetadata(createParser(filepath))
+    if metadata.has("width") and metadata.has("height"):
+        return metadata.get("width"), metadata.get("height")
+    else:
+        return 1280, 720
