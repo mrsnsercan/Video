@@ -89,3 +89,4 @@ def get_width_height(filepath):
         return metadata.get("width"), metadata.get("height")
     else:
         return 1280, 720
+        
