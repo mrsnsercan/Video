@@ -25,7 +25,7 @@ def get_codec(filepath, channel="v:0"):
     return output.decode("utf-8").split()
 
 
-async def encode(filepath):
+async def encode(self, filepath):  # self parametresi eklendi
     path, extension = os.path.splitext(filepath)
     file_name = os.path.basename(path)
     encode_dir = os.path.join(
@@ -39,7 +39,7 @@ async def encode(filepath):
         return output_filepath
     print(filepath)
 
-    # İlk ses kanalının kodunu al (a:0)
+    # İlk ses kanalının kodunu al
     audio_codec = get_codec(filepath, channel='a:0')
 
     # Ses işleme seçenekleri
